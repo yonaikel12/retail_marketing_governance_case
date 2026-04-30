@@ -1,0 +1,114 @@
+seed: 2026
+
+case:
+  name: retail_product_retention_post_trial
+  business_goal: maximizar el margen neto retenido tras la prueba de un nuevo producto retail
+  business_question: que clientes tienen mayor riesgo de abandonar tras la prueba y a quienes conviene activar para maximizar ROI
+  target: churn_120d
+  target_definition: 1 indica abandono dentro de los 120 dias posteriores a la prueba del producto
+  analytical_success_definition: reducir churn esperado y priorizar contactos con valor esperado neto positivo
+  id_columns:
+    - customer_id
+  date_cols:
+    - snapshot_date
+    - first_purchase_date
+    - last_purchase_date
+  feature_cols:
+    - region
+    - city_tier
+    - acquisition_channel
+    - preferred_channel
+    - customer_segment
+    - loyalty_tier
+    - household_income
+    - age
+    - tenure_months
+    - web_sessions_30d
+    - app_sessions_30d
+    - email_open_rate
+    - discount_sensitivity
+    - avg_order_value
+    - orders_12m
+    - monetary_12m
+    - margin_12m
+    - support_tickets_90d
+    - nps_score
+    - satisfaction_score
+    - days_since_last_purchase
+    - return_rate_12m
+    - on_time_delivery_rate
+    - promo_contacts_90d
+    - basket_diversity
+    - competitor_price_gap_pct
+    - product_reviews_12m
+    - trial_units
+    - subscription_opt_in
+    - premium_pack_adoption
+    - private_label_share
+    - clv_frequency
+    - clv_recency_days
+    - clv_T_days
+    - clv_monetary_avg
+  derived_feature_cols:
+    - household_income_missing_flag
+    - nps_score_missing_flag
+    - competitor_price_gap_pct_missing_flag
+  outlier_cols:
+    - household_income
+    - avg_order_value
+    - monetary_12m
+    - margin_12m
+  vif_cols:
+    - household_income
+    - avg_order_value
+    - orders_12m
+    - monetary_12m
+    - margin_12m
+    - web_sessions_30d
+    - app_sessions_30d
+    - days_since_last_purchase
+    - discount_sensitivity
+    - basket_diversity
+  representativeness_dimensions:
+    - region
+    - acquisition_channel
+    - customer_segment
+  sampling_reference_mix:
+    region:
+      north: 0.18
+      center: 0.27
+      south: 0.22
+      east: 0.16
+      west: 0.17
+    acquisition_channel:
+      store: 0.36
+      email: 0.16
+      paid_social: 0.18
+      marketplace: 0.12
+      organic_search: 0.18
+  contact_policy:
+    contact_cost: 1.8
+    offer_cost: 5.5
+    retention_success_rate: 0.34
+    annual_discount_rate: 0.10
+    max_contact_share: 0.35
+  nba_policy:
+    critical_threshold: 0.65
+    high_threshold: 0.50
+    medium_threshold: 0.35
+  modeling:
+    test_size: 0.25
+    random_state: 42
+    parsimony_auc_tolerance: 0.03
+    baseline_algorithm: logistic
+    challenger_algorithm: random_forest
+    probability_threshold_grid:
+      start: 0.15
+      end: 0.80
+      step: 0.05
+  clv:
+    horizon_months: 6
+    bgf_penalizer: 0.01
+    ggf_penalizer: 0.01
+    transaction_time_unit: D
+    margin_proxy_column: clv_monetary_avg
